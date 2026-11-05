@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <classAccesses>
+        <apexClass>WhoHasAccessController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>Who_Has_Access_Viewer</name>
+    </customPermissions>
+    <description
+  >Grants access to the Who Has Access record-sharing visualiser. Assign only to admins and architects — it reveals who can see which records.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Who Has Access</label>
+    <tabSettings>
+        <tab>Who_Has_Access</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+</PermissionSet>

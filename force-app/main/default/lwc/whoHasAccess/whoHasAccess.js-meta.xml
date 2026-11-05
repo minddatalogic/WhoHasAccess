@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Who Has Access</masterLabel>
+    <description
+  >Interactive D3 tree showing who can access a record and why (OWD, share table row causes, groups, roles, profiles and permission sets).</description>
+    <targets>
+        <target>lightning__RecordPage</target>
+        <target>lightning__RecordAction</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig
+      targets="lightning__RecordPage,lightning__AppPage,lightning__HomePage"
+    >
+            <property
+        name="height"
+        type="Integer"
+        default="620"
+        label="Canvas height (px)"
+      />
+            <property
+        name="nodeStyle"
+        type="String"
+        default="cards"
+        datasource="cards,tonal,minimal"
+        label="Default node style"
+      />
+        </targetConfig>
+        <targetConfig targets="lightning__RecordAction">
+            <actionType>ScreenAction</actionType>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

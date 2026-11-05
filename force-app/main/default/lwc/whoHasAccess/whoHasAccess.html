@@ -1,0 +1,241 @@
+<template>
+  <lightning-card title="Who Has Access" icon-name="standard:user_role">
+    <div class="slds-p-horizontal_medium">
+      <template lwc:if={showRecordInput}>
+        <div class="manual-input slds-m-bottom_small">
+          <lightning-input
+            label="Record Id"
+            placeholder="Paste a record Id, e.g. 001..."
+            value={manualRecordId}
+            onchange={handleManualIdChange}
+            onkeyup={handleManualKeyUp}
+          ></lightning-input>
+          <lightning-button
+            variant="brand"
+            label="Analyse"
+            onclick={handleManualAnalyse}
+          ></lightning-button>
+        </div>
+      </template>
+
+      <template lwc:if={rootInfo}>
+        <div class="root-info slds-m-bottom_x-small">
+          <span class="root-name">{rootInfo.name}</span>
+          <span class="root-sub">{rootInfo.subtitle}</span>
+        </div>
+      </template>
+
+      <div class="toolbar slds-m-bottom_x-small">
+        <lightning-button-group class="tree-actions">
+          <lightning-button-icon
+            icon-name="utility:back"
+            alternative-text="Back to previous record"
+            title="Back"
+            disabled={backDisabled}
+            onclick={handleBack}
+          ></lightning-button-icon>
+          <lightning-button-icon
+            icon-name="utility:refresh"
+            alternative-text="Refresh"
+            title="Refresh"
+            onclick={handleRefresh}
+          ></lightning-button-icon>
+          <lightning-button-icon
+            icon-name="utility:expand_all"
+            alternative-text="Expand loaded nodes"
+            title="Expand loaded nodes"
+            onclick={handleExpand}
+          ></lightning-button-icon>
+          <lightning-button-icon
+            icon-name="utility:collapse_all"
+            alternative-text="Collapse all"
+            title="Collapse all"
+            onclick={handleCollapse}
+          ></lightning-button-icon>
+          <lightning-button-icon
+            icon-name="utility:expand_alt"
+            alternative-text="Fit to screen"
+            title="Fit to screen"
+            onclick={handleFit}
+          ></lightning-button-icon>
+        </lightning-button-group>
+        <lightning-radio-group
+          class="style-switch"
+          name="nodeStyle"
+          label="Node style"
+          variant="label-hidden"
+          type="button"
+          options={styleOptions}
+          value={activeStyle}
+          onchange={handleStyleChange}
+        ></lightning-radio-group>
+        <div class="search">
+          <lightning-input
+            type="search"
+            variant="label-hidden"
+            label="Find a loaded node"
+            placeholder="Find a user, group or role in the loaded tree"
+            value={searchTerm}
+            onchange={handleSearch}
+            onkeyup={handleSearchKeyUp}
+          ></lightning-input>
+          <template lwc:if={hasMatchCount}>
+            <span class="match-count">{matchLabel}</span>
+          </template>
+        </div>
+        <ul class="legend" aria-label="Legend">
+          <template for:each={legend} for:item="item">
+            <li key={item.type} class="chip" style={item.style}>
+              <span class="dot" style={item.dotStyle}></span>{item.label}
+            </li>
+          </template>
+        </ul>
+      </div>
+
+      <template lwc:if={error}>
+        <div
+          class="slds-notify slds-notify_alert slds-alert_error slds-m-bottom_x-small"
+          role="alert"
+        >
+          {error}
+        </div>
+      </template>
+
+      <div class="layout">
+        <div class="canvas-wrap" style={canvasStyle}>
+          <div class="canvas" lwc:dom="manual" lwc:ref="canvas"></div>
+          <template lwc:if={isLoading}>
+            <lightning-spinner
+              alternative-text="Resolving access"
+              size="medium"
+            ></lightning-spinner>
+          </template>
+          <template lwc:if={showEmptyState}>
+            <div class="empty">
+              Enter a record Id above to see who can access it and why.
+            </div>
+          </template>
+          <p class="hint">
+            Click + to expand · click a node for details · scroll to zoom · drag
+            to pan
+          </p>
+        </div>
+
+        <template lwc:if={selected}>
+          <aside class="details" aria-label="Node details">
+            <div class="details-head">
+              <span class="badge" style={selectedBadgeStyle}
+                >{selectedTypeLabel}</span
+              >
+              <lightning-button-icon
+                icon-name="utility:close"
+                variant="bare"
+                alternative-text="Close details"
+                onclick={handleCloseDetails}
+              ></lightning-button-icon>
+            </div>
+            <h3 class="details-name">{selected.name}</h3>
+            <template lwc:if={selected.accessLevel}>
+              <p class="details-access">
+                Access: <strong>{selected.accessLevel}</strong>
+              </p>
+            </template>
+            <template lwc:if={selected.subtitle}>
+              <p class="details-sub">{selected.subtitle}</p>
+            </template>
+
+            <div class="details-section">
+              <p class="section-title">Access path</p>
+              <ol class="path">
+                <template for:each={selectedPath} for:item="step">
+                  <li key={step.key}>{step.label}</li>
+                </template>
+              </ol>
+            </div>
+
+            <div class="details-actions">
+              <template lwc:if={canOpenSelected}>
+                <lightning-button
+                  label="Open record"
+                  icon-name="utility:new_window"
+                  onclick={handleOpenRecord}
+                ></lightning-button>
+              </template>
+              <template lwc:if={isParentSelected}>
+                <lightning-button
+                  variant="brand"
+                  label="Analyse parent"
+                  onclick={handleAnalyseParent}
+                ></lightning-button>
+              </template>
+              <template lwc:if={isUserSelected}>
+                <lightning-button
+                  variant="brand"
+                  label="Check effective access"
+                  onclick={handleCheckAccess}
+                ></lightning-button>
+              </template>
+            </div>
+
+            <template lwc:if={userAccessLoading}>
+              <div class="inline-spinner">
+                <lightning-spinner
+                  alternative-text="Checking access"
+                  size="small"
+                ></lightning-spinner>
+              </div>
+            </template>
+            <template lwc:if={userAccessError}>
+              <p class="slds-text-color_error">{userAccessError}</p>
+            </template>
+
+            <template lwc:if={userAccess}>
+              <div class="details-section">
+                <p class="section-title">
+                  Effective record access:
+                  <strong>{userAccess.maxAccess}</strong>
+                </p>
+                <ul class="checks">
+                  <template for:each={recordAccessRows} for:item="row">
+                    <li key={row.key}>
+                      <lightning-icon
+                        icon-name={row.icon}
+                        variant={row.variant}
+                        size="xx-small"
+                        alternative-text={row.alt}
+                      ></lightning-icon>
+                      <span>{row.label}</span>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+              <div class="details-section">
+                <p class="section-title">Object &amp; system permissions</p>
+                <ul class="checks">
+                  <template for:each={objectAccessRows} for:item="row">
+                    <li key={row.key}>
+                      <lightning-icon
+                        icon-name={row.icon}
+                        variant={row.variant}
+                        size="xx-small"
+                        alternative-text={row.alt}
+                      ></lightning-icon>
+                      <span>{row.label}</span>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+              <template lwc:if={accessWarning}>
+                <p class="warning">{accessWarning}</p>
+              </template>
+              <p class="footnote">
+                From UserRecordAccess (what Salesforce actually enforces) and
+                the user's assigned profile, permission sets and groups.
+              </p>
+            </template>
+          </aside>
+        </template>
+      </div>
+    </div>
+  </lightning-card>
+</template>

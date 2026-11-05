@@ -1,0 +1,8 @@
+/* Widen only the quick-action modal that hosts Who Has Access */
+.slds-modal__container:has(c-who-has-access-action) {
+  width: 92vw !important;
+  max-width: 92vw !important;
+}
+.slds-modal__content:has(c-who-has-access-action) {
+  padding: 0.25rem !important;
+}

@@ -1,0 +1,7 @@
+.context {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  color: #706e6b;
+}
