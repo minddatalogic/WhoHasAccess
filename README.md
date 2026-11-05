@@ -17,7 +17,7 @@ It is built on Apex and D3.js, styled with SLDS 2 (Cosmos), and tested against S
 
 ## Preview
 
-Demo : "[![Watch the video](https://youtu.be/aPX4bgKxn3A)](https://youtu.be/aPX4bgKxn3A)
+Demo : [![Watch the video](https://youtu.be/aPX4bgKxn3A)](https://youtu.be/aPX4bgKxn3A)
 
 
 <table>
