@@ -52,11 +52,9 @@ It is built on Apex and D3.js, styled with SLDS 2 (Cosmos), and tested against S
 
 ```bash
 git clone <this-repository-url>
-cd who-has-access
+cd WhoHasAccess
 sf project deploy start -d force-app -o <YOUR_ORG>
 ```
-
-> Deploy only `force-app`. The `demo/` folder contains sample objects and data for scratch orgs only.
 
 ### Option 2: Install the unlocked package
 
