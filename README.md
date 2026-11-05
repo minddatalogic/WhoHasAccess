@@ -15,9 +15,27 @@ It is built on Apex and D3.js, styled with SLDS 2 (Cosmos), and tested against S
 
 ---
 
-## Demo
+## Preview
 
-[![Watch the video](https://youtu.be/aPX4bgKxn3A)](https://youtu.be/aPX4bgKxn3A)
+Demo : "[![Watch the video](https://youtu.be/aPX4bgKxn3A)](https://youtu.be/aPX4bgKxn3A)
+
+
+<table>
+  <tr>
+    <td align="center"><b>1</b></td>
+    <td align="center"><b>2</b></td>
+    <td align="center"><b>3</b></td>
+  </tr>
+  <tr>
+    <td><a href="images/1.png"><img src="images/1.png" alt="Who Has Access — preview 1" width="300"></a></td>
+    <td><a href="images/2.png"><img src="images/2.png" alt="Who Has Access — preview 2" width="300"></a></td>
+    <td><a href="images/3.png"><img src="images/3.png" alt="Who Has Access — preview 3" width="300"></a></td>
+  </tr>
+</table>
+
+<sub>Click an image to view it full size.</sub>
+
+---
 
 ## Features
 
